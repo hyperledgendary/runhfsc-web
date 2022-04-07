@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>runhfsc</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"/>
+    <link rel="stylesheet" href="xterm.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+    {# <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.min.js"></script> #}
+    <script src="bundle.js"></script>
+  </head>
+  <body>
+    <section class="section">
+      <div class="columns">
+          {# <div class="content" style="overflow-y: true;">
+            {{info | safe}}
+          </div>
+        </div> #}
+        <div class="column">
+          <div id="terminal"></div>
+        </div>
+      </div>
+    </section>
+    <script>
+      runhfscweb.launch("terminal")
+    </script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+#
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: runhfsc-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: runhfsc-web
+  template:
+    metadata:
+      labels:
+        app: runhfsc-web
+    spec:
+      containers:
+        - name: main
+          image: runhfsc-web:0.0.4
+          env:
+            - name: RUNHFSC_CONFIG_JSON_FILE
+              value: /fabric/appcfg/cfg.json 
+          resources:
+            requests:
+              memory: "50Mi"
+              cpu: "0.1"
+          volumeMounts:
+            - name: fabricid
+              mountPath: /fabric/application/ids
+            - name: tlscerts
+              mountPath: /fabric/tlscacerts
+            - name: runhfsccfg
+              mountPath: /fabric/appcfg
+      volumes:
+        - name: runhfsccfg
+          configMap:
+            name: app-runhfsc-v1-config
+        - name: fabricid
+          configMap:
+            name: app-fabric-ids-v1-map
+        - name: tlscerts
+          configMap:
+            name: app-fabric-tls-v1-map
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-runhfsc-v1-config
+data: 
+  cfg.json : | 
+    {
+      "default": {
+          "gateway": {
+              "tlsCertFile": "/fabric/tlscacerts/tlsca-signcert.pem",
+              "peerEndpoint": "org1-peer-gateway-svc:7051",
+              "userIdFile": "/fabric/application/ids/appuser_org1.id"
+          }
+      }
+    }
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 60s
+  labels:
+    app: runhfsc-web
+  name:  runhfsc-web
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: runhfsc-web.vcap.me
+      http:
+        paths:
+          - backend:
+              service:
+                name: runhfsc-web
+                port:
+                  name: http
+            path: /
+            pathType: ImplementationSpecific
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: runhfsc-web
+spec:
+  ports:
+    - name: http
+      port: 4000
+      protocol: TCP
+  selector:
+    app:  runhfsc-web
+

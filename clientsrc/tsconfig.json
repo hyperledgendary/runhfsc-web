@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "declaration": true,
+      "lib": ["es6", "dom", "dom.iterable"],
+      "module": "es6",
+      "moduleResolution": "node",
+      "removeComments": true,
+ 
+      "strict": true,
+      "target": "es6",
+      "outDir": "../dist",
+      "allowSyntheticDefaultImports":true,
+      "inlineSourceMap": true,
+      "inlineSources": true,
+      "preserveConstEnums": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,      "esModuleInterop": true,
+    },
+    "include": [
+      "./**/*"    ],
+    "exclude": [
+      "dist",
+      "node_modules","static"
+    ]
+  }
