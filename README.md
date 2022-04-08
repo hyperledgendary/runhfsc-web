@@ -31,6 +31,7 @@ cd <wherever>/fabric-samples/test-network-k8s
 # git clone runhfsc and runhfsc-web locally
 
 cd <wherever>/runhfsc
+npm install
 npm run build && npm pack
 cp hyperledgendary-runhfsc-0.0.4.tgz <wherever>/runhfsc-web
 
