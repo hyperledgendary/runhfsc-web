@@ -28,6 +28,11 @@ cd <wherever>/fabric-samples/test-network-k8s
 ./network chaincode deploy
 ./network application
 
+# git clone runhfsc and runhfsc-web locally
+
+cd <wherever>/runhfsc
+npm run build && npm pack
+cp hyperledgendary-runhfsc-0.0.4.tgz <wherever>/runhfsc-web
 
 cd <wherever>/runhfsc-web
 docker build -t runhfsc-web:0.0.4 .
