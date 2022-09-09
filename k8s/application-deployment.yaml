@@ -20,19 +20,19 @@ spec:
     spec:
       containers:
         - name: main
-          image: runhfsc-web:0.0.4
-          env:
-            - name: RUNHFSC_CONFIG_JSON_FILE
-              value: /fabric/appcfg/cfg.json 
+          image: localhost:5000/runhfsc-web:0.0.5
           resources:
             requests:
               memory: "50Mi"
               cpu: "0.1"
+          env:
+            - name: RUNHFSC_CONFIG_JSON_FILE
+              value: /fabric/appcfg/runhfsc.json
           volumeMounts:
             - name: fabricid
               mountPath: /fabric/application/ids
-            - name: tlscerts
-              mountPath: /fabric/tlscacerts
+            - name: connectionprofile
+              mountPath: /fabric/application/cp
             - name: runhfsccfg
               mountPath: /fabric/appcfg
       volumes:
@@ -41,27 +41,32 @@ spec:
             name: app-runhfsc-v1-config
         - name: fabricid
           configMap:
-            name: app-fabric-ids-v1-map
-        - name: tlscerts
+            name: app-fabric-ids-v2-map
+        - name: connectionprofile
           configMap:
-            name: app-fabric-tls-v1-map
+            name: app-org1peer-endpoint
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-runhfsc-v1-config
 data: 
-  cfg.json : | 
+  runhfsc.json : | 
     {
-      "default": {
-          "gateway": {
-              "tlsCertFile": "/fabric/tlscacerts/tlsca-signcert.pem",
-              "peerEndpoint": "org1-peer-gateway-svc:7051",
-              "userIdFile": "/fabric/application/ids/appuser_org1.id"
-          }
-      }
+        "default": {
+            "type": "gateway",
+            "tlsEnabled": true,
+            "identity": {
+                "idFile":"/fabric/application/ids/asset-transfer_appid.json",
+                "mspId":"Org1MSP"
+            },
+            "endpoint": {
+                "connectionProfileFile":"/fabric/application/cp/profile.json"
+            },
+            "defaultChannel":"mychannel",
+            "defaultContract":"asset-transfer"
+        }
     }
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -74,7 +79,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: runhfsc-web.vcap.me
+    - host: runhfsc-web.localho.st
       http:
         paths:
           - backend:

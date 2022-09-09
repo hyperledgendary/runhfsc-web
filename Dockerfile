@@ -30,8 +30,8 @@ COPY --chown=node:node docker/docker-entrypoint.sh /usr/src/app/docker-entrypoin
 RUN npm install
 RUN chown node:node /usr/src/app
 
-COPY --chown=node:node hyperledgendary-runhfsc-0.0.4.tgz .
-RUN npm i -g hyperledgendary-runhfsc-0.0.4.tgz
+COPY --chown=node:node hyperledgendary-runhfsc-0.0.5.tgz .
+RUN npm i -g hyperledgendary-runhfsc-0.0.5.tgz
 
 ENV PORT 4000
 EXPOSE 4000

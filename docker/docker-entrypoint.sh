@@ -4,4 +4,4 @@
 #
 set -euo pipefail
 
-RUNHFSC_LOG=$(pwd)/debug.log  DEBUG=* node dist/app.js | npx pino-pretty
+RUNHFSC_LOG=$(pwd)/debug.log  DEBUG=* node dist/app.js --config /fabric/appcfg/runhfsc.json | npx pino-pretty
